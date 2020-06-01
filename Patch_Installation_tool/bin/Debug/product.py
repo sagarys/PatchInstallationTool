@@ -43,6 +43,7 @@ for patch in patch_list:
     patchList.update({patch:''})
     for subdir_file in subdir_list :
         patchList[patch] = patchList[patch] + subdir_file +","
+    patchList[patch] = patchList[patch][:-1]
     f1.write(str(patch)+":"+str(patchList[patch])+'\n')
 
 print(patchList)
