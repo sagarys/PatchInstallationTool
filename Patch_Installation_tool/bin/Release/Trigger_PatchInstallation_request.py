@@ -18,7 +18,7 @@ except ValueError as e:
 calculus_req_json={
 "request" : {
     "name"                  : "copland script installion",
-    "email_list"            : "sagar.s@efi.com",
+    "email_list"            : "",
     "region"                : "vCommander IDC",
     "user"                  : "sagars",
   }
@@ -76,7 +76,7 @@ install_req = json.loads(ss)
 ss = json.dumps(tests_suite_json)
 tests_suite_req = json.loads(ss)
 
-
+calculus_req_json['request']['email_list'] = "sagars@efi.com,"+GMproductDetails['Email']
 if GMproductDetails['IP_Adress'] != "":
     install_req_json['installs'][0].update({"target_ip":GMproductDetails['IP_Adress']})
 else:

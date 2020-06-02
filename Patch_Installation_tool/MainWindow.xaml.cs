@@ -52,6 +52,7 @@ namespace Patch_Installation_tool
             cboProducts.SelectedIndex = 0;
             radioEnglish.IsChecked = true;
             radioServer.IsChecked = true;
+            txtEmailAddr.Text = Environment.UserName+"@efi.com";
         }
         public MainWindow()
         {
@@ -69,7 +70,7 @@ namespace Patch_Installation_tool
                 if(prod == cboProducts.SelectedValue.ToString())
                 {
                     var patchList = preq.Split(':').Last();
-                    txtPreReq.Text = patchList;
+                    lblPrerequisite.Content = patchList;
                     break;
                 }
             }
@@ -94,13 +95,21 @@ namespace Patch_Installation_tool
             if (radioServer.IsChecked == true)
             {
                 temp.Add("ServerType","Server");
-                temp.Add("IP_Adress",txtIpAdress.Text);
+                if (txtIpAdress.Text == "")
+                {
+                    MessageBox.Show("IP Address is empty");
+                    return;
+                }
+                else
+                    temp.Add("IP_Adress", txtIpAdress.Text);
             }
             else
             {
                 temp.Add("ServerType", "VM");
                 temp.Add("IP_Adress","");
             }
+           
+            temp.Add("Email", txtEmailAddr.Text.ToString());
             var tt =  JsonConvert.SerializeObject(temp);
             File.WriteAllText(@"product_Details.json", tt);
             var retStatus = ExecuteCommand("python Trigger_PatchInstallation_request.py product_Details.json");
