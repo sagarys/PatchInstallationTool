@@ -17,7 +17,7 @@ except ValueError as e:
 
 calculus_req_json={
 "request" : {
-    "name"                  : "copland script installion",
+    "name"                  : "",
     "email_list"            : "",
     "region"                : "vCommander IDC",
     "user"                  : "sagars",
@@ -60,9 +60,14 @@ def updatePatchTestSuite(prodname,prereqList):
 def checkpreq(podname,prereqList) :
     patch_dir= "\\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches"
     patchList = os.listdir(os.path.join(patch_dir,podname))
-    for patchName in patchList :
-       if patchName not in prereqList :
-           sys.exit(3)
+    prereqListArr = prereqList.split(',')
+    print(prereqListArr)
+    for prereq in prereqListArr :
+        for patchName in patchList :
+            if patchName in prereq :
+                break
+            else: 
+                sys.exit(3)
            
 checkpreq(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
 updatePatchTestSuite(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
@@ -81,6 +86,8 @@ if GMproductDetails['IP_Adress'] != "":
     install_req_json['installs'][0].update({"target_ip":GMproductDetails['IP_Adress']})
 else:
     install_req_json['installs'][0].update({"livelink":"true"})
+    if GMproductDetails['Language'] == "Japanese" and "Windows 10"in GMproductDetails['osType'] :
+        install_req_json['installs'][0].update({"vm_template":"Calculus win1064.5.2.1.2 J"})
 
 calculus_req_json['request']['name'] = GMproductDetails['Product']
 install_req_json['installs'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
@@ -93,4 +100,6 @@ calculus_req_json['request'].update(tests_suite_json)
 f = open("cal_req.json", "w")
 f.write(json.dumps(calculus_req_json))
 f.close()
-subprocess.call("python apiv10.py cal_req.json") 
+retStatus = subprocess.call("python apiv10.py cal_req.json") 
+if retStatus == 1 :
+    sys.exit(1)
