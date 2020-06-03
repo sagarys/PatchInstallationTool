@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace Patch_Installation_tool
 {
@@ -78,6 +79,7 @@ namespace Patch_Installation_tool
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             Dictionary<string, string> temp = new Dictionary<string, string>();
             temp.Add("Product", cboProducts.SelectedValue.ToString());
             temp.Add("calculus_name", GmProdList[cboProducts.SelectedIndex].CalculusName);
@@ -113,6 +115,7 @@ namespace Patch_Installation_tool
             var tt =  JsonConvert.SerializeObject(temp);
             File.WriteAllText(@"product_Details.json", tt);
             var retStatus = ExecuteCommand("python Trigger_PatchInstallation_request.py product_Details.json");
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
             if (retStatus == 3)
                 MessageBox.Show("All the Prerequisite are not present in the \\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\ and \\\\pdlfiles\\pdlfiles\\eng\\Sustaining_Patches\\  Location!!!");
             else if (retStatus != 0)
