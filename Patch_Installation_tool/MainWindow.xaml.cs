@@ -52,7 +52,7 @@ namespace Patch_Installation_tool
             }
             cboProducts.SelectedIndex = 0;
             radioEnglish.IsChecked = true;
-            radioServer.IsChecked = true;
+            radioVM.IsChecked = true;
             txtEmailAddr.Text = Environment.UserName+"@efi.com";
         }
         public MainWindow()
@@ -71,7 +71,7 @@ namespace Patch_Installation_tool
                 if(prod == cboProducts.SelectedValue.ToString())
                 {
                     var patchList = preq.Split(':').Last();
-                    lblPrerequisite.Content = patchList;
+                    txtPrerequisite.Text = patchList;
                     break;
                 }
             }
