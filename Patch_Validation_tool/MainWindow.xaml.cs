@@ -57,7 +57,40 @@ namespace Patch_Installation_tool
             chkInstallerPath.IsChecked = true;
             if (chkInstallerPath.IsChecked == false)
                 txtBuildPath.IsEnabled = false;
+            txtPatchpath.IsEnabled = false;
         }
+        public void Get_Patch_Details()
+        {
+            string line;
+            bool found = false;
+            int count = 0;
+            // Read the file and display it line by line.  
+            if (File.Exists(txtPatchpath.Text))
+            {
+                System.IO.StreamReader file = new System.IO.StreamReader(txtPatchpath.Text);
+                while ((line = file.ReadLine()) != null && count < 25)
+                {
+                    if (line.Contains("Prerequisites"))
+                    {
+                        var prereqlist = line.Split(':').Last();
+                        //prereqlist = prereqlist.Remove(prereqlist.Length - 1);
+                        txtPreReq.Text = prereqlist+Path.GetFileName(txtPatchpath.Text);
+                        found = true;
+                        break;
+                    }
+                    count++;
+                }
+                if(!found)
+                {
+                    MessageBox.Show("Invalid Patch !!!!!!!!!!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Enter Patch location !!!!!");
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -153,6 +186,31 @@ namespace Patch_Installation_tool
             radioVM.IsChecked = false;
             radioVM.IsEnabled = false;
             radioServer.IsChecked = true;
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            txtPatchpath.IsEnabled = true;
+        }
+        private void CheckBox_UnChecked(object sender, RoutedEventArgs e)
+        {
+            txtPatchpath.Text = "";
+            txtPatchpath.IsEnabled = false;
+        }
+
+        private void TxtPatchpath_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Get_Patch_Details();
+        }
+        private void ChkPatchLoc_Checked(object sender, RoutedEventArgs e)
+        {
+            txtPatchpath.IsEnabled = true;
+        }
+
+        private void ChkPatchLoc_Unchecked(object sender, RoutedEventArgs e)
+        {
+            txtPatchpath.IsEnabled = false;
+            txtPatchpath.Text = "";
         }
     }
 }
