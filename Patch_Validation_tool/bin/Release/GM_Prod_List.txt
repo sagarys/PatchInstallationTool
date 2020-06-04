@@ -1,0 +1,7 @@
+EFI_Bernstein 1.0 J : Win 7 FES 32/64-bit : flame45_windows/bernstein : Ricoh 
+EFI_Sinatra 3.0 R : Window 8.1 : flame50_windows/sinatra : Ricoh 
+EFI_Prince-1_0-J : Windows 10 LTSB 2016 : flame60_windows/prince : Ricoh 
+EFI_Bowie-1_0-J : Windows 10 LTSB 2016 : flame60_windows/bowie : Ricoh 
+EFI_Biggie_1_0J : Windows 10 LTSB 2016 : flame60_windows/Biggie : Ricoh 
+EFI_Prince-2_0-J : Windows 10 LTSB 2016 : flame70_windows/prince : Ricoh 
+EFI_Bowie-2_0-J : Windows 10 LTSB 2016 : flame70_windows/bowie : Ricoh 
