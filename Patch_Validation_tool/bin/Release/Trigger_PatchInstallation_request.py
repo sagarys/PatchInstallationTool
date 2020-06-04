@@ -63,12 +63,9 @@ def checkpreq(podname,prereqList) :
     prereqListArr = prereqList.split(',')
     print(prereqListArr)
     for prereq in prereqListArr :
-        for patchName in patchList :
-            if patchName in prereq :
-                break
-            else: 
-                sys.exit(3)
-           
+        if prereq not in patchList :
+            sys.exit(3)
+            
 checkpreq(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
 updatePatchTestSuite(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
 
@@ -81,7 +78,7 @@ install_req = json.loads(ss)
 ss = json.dumps(tests_suite_json)
 tests_suite_req = json.loads(ss)
 
-calculus_req_json['request']['email_list'] = "sagars@efi.com,"+GMproductDetails['Email']
+calculus_req_json['request']['email_list'] = GMproductDetails['Email']
 if GMproductDetails['IP_Adress'] != "":
     install_req_json['installs'][0].update({"target_ip":GMproductDetails['IP_Adress']})
 else:
@@ -94,8 +91,12 @@ install_req_json['installs'][0]['product'] = str(GMproductDetails['calculus_name
 install_req_json['installs'][0]['installer_url'] = str(GMproductDetails['Installer_patch'])
 tests_suite_json['tests'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
 
-calculus_req_json['request'].update(install_req_json)
-calculus_req_json['request'].update(tests_suite_json)
+if GMproductDetails['InstallOnServer'] == "True" :
+    calculus_req_json['request'].update(install_req_json)
+
+if GMproductDetails['InstallOnServer'] == "False" :
+    tests_suite_json['tests'][0].update({"target_ip":GMproductDetails['IP_Adress']})
+    calculus_req_json['request'].update(tests_suite_json)
 
 f = open("cal_req.json", "w")
 f.write(json.dumps(calculus_req_json))

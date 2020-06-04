@@ -24,6 +24,6 @@
         <TextBox Name="txtEmailAddr" HorizontalAlignment="Left" Height="28" Margin="480,51,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="198"/>
         <Label Content="Email-Address" HorizontalAlignment="Left" Margin="480,19,0,0" VerticalAlignment="Top" Height="27" Width="122"/>
         <Label Content="IP Address" HorizontalAlignment="Left" Margin="76,307,0,0" VerticalAlignment="Top" Height="26" Width="78"/>
-        <TextBox Name ="txtPrerequisite" HorizontalAlignment="Left" Height="43" Margin="76,174,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="602" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Name ="txtPrereqFrmPdl" HorizontalAlignment="Left" Height="43" Margin="76,174,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="602" IsReadOnly="True" BorderThickness="0"/>
     </Grid>
 </Window>

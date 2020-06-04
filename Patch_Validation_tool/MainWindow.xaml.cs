@@ -52,7 +52,7 @@ namespace Patch_Installation_tool
             }
             cboProducts.SelectedIndex = 0;
             radioEnglish.IsChecked = true;
-            radioVM.IsChecked = true;
+            radioServer.IsChecked = true;
             txtEmailAddr.Text = Environment.UserName+"@efi.com";
             chkInstallerPath.IsChecked = true;
             if (chkInstallerPath.IsChecked == false)
@@ -75,10 +75,11 @@ namespace Patch_Installation_tool
                 if(prod == cboProducts.SelectedValue.ToString())
                 {
                     var patchList = preq.Split(':').Last();
-                    txtPrerequisite.Text = patchList;
+                    txtPrereqFrmPdl.Text = patchList;
                     break;
                 }
             }
+            txtPreReq.Text = "";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -143,11 +144,15 @@ namespace Patch_Installation_tool
         {
             txtBuildPath.Text = @"\\bauser\Fiery-products\Sustaining_builds\\" + cboProducts.SelectedValue.ToString() + "\\GM";
             txtBuildPath.IsEnabled = true;
+            radioVM.IsEnabled = true;
         }
         private void ChkInstallerPath_Unchecked(object sender, RoutedEventArgs e)
         {
             txtBuildPath.Text = "";
             txtBuildPath.IsEnabled = false;
+            radioVM.IsChecked = false;
+            radioVM.IsEnabled = false;
+            radioServer.IsChecked = true;
         }
     }
 }
