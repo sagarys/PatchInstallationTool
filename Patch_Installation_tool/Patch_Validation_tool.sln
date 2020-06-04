@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1082
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patch_Installation_tool", "Patch_Installation_tool.csproj", "{4D7FFF79-45D5-4C15-932C-944DC76BD804}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patch_Validation_tool", "Patch_Validation_tool.csproj", "{4D7FFF79-45D5-4C15-932C-944DC76BD804}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

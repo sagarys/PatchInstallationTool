@@ -54,6 +54,9 @@ namespace Patch_Installation_tool
             radioEnglish.IsChecked = true;
             radioVM.IsChecked = true;
             txtEmailAddr.Text = Environment.UserName+"@efi.com";
+            chkInstallerPath.IsChecked = true;
+            if (chkInstallerPath.IsChecked == false)
+                txtBuildPath.IsEnabled = false;
         }
         public MainWindow()
         {
@@ -63,7 +66,8 @@ namespace Patch_Installation_tool
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            txtBuildPath.Text = @"\\bauser\Fiery-products\Sustaining_builds\\"+cboProducts.SelectedValue.ToString()+"\\GM";
+            if (chkInstallerPath.IsChecked == true)
+                txtBuildPath.Text = @"\\bauser\Fiery-products\Sustaining_builds\\"+cboProducts.SelectedValue.ToString()+"\\GM";
             string[] pactches = System.IO.File.ReadAllLines(@"Prod_Patch_List.txt");
             foreach (var preq in pactches)
             {
@@ -100,6 +104,7 @@ namespace Patch_Installation_tool
                 if (txtIpAdress.Text == "")
                 {
                     MessageBox.Show("IP Address is empty");
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
                     return;
                 }
                 else
@@ -110,7 +115,7 @@ namespace Patch_Installation_tool
                 temp.Add("ServerType", "VM");
                 temp.Add("IP_Adress","");
             }
-           
+            temp.Add("InstallOnServer", chkInstallerPath.IsChecked.ToString());
             temp.Add("Email", txtEmailAddr.Text.ToString());
             var tt =  JsonConvert.SerializeObject(temp);
             File.WriteAllText(@"product_Details.json", tt);
@@ -132,6 +137,17 @@ namespace Patch_Installation_tool
         private void RadioServer_Checked(object sender, RoutedEventArgs e)
         {
             txtIpAdress.IsEnabled = true;
+        }
+
+        private void ChkInstallerPath_Checked(object sender, RoutedEventArgs e)
+        {
+            txtBuildPath.Text = @"\\bauser\Fiery-products\Sustaining_builds\\" + cboProducts.SelectedValue.ToString() + "\\GM";
+            txtBuildPath.IsEnabled = true;
+        }
+        private void ChkInstallerPath_Unchecked(object sender, RoutedEventArgs e)
+        {
+            txtBuildPath.Text = "";
+            txtBuildPath.IsEnabled = false;
         }
     }
 }
