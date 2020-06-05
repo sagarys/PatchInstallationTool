@@ -136,24 +136,33 @@ namespace Patch_Installation_tool
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var txtrrereq = txtPreReq.Text.Split(',');
+            foreach(var prereq in txtrrereq)
+            {
+                if(!txtPrereqFrmPdl.Text.Contains(prereq))
+                {
+                    MessageBox.Show(prereq + " Not present in the \\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\");
+                    return;
+                }
+            }
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-            Dictionary<string, string> temp = new Dictionary<string, string>();
-            temp.Add("Product", cboProducts.SelectedValue.ToString());
-            temp.Add("calculus_name", GmProdList[cboProducts.SelectedIndex].CalculusName);
-            temp.Add("osType", GmProdList[cboProducts.SelectedIndex].OsType);
-            temp.Add("Installer_patch", txtBuildPath.Text.ToString());
-            temp.Add("Prerequisite", txtPreReq.Text.ToString());
+            Dictionary<string, string> product_Details_json = new Dictionary<string, string>();
+            product_Details_json.Add("Product", cboProducts.SelectedValue.ToString());
+            product_Details_json.Add("calculus_name", GmProdList[cboProducts.SelectedIndex].CalculusName);
+            product_Details_json.Add("osType", GmProdList[cboProducts.SelectedIndex].OsType);
+            product_Details_json.Add("Installer_patch", txtBuildPath.Text.ToString());
+            product_Details_json.Add("Prerequisite", txtPreReq.Text.ToString());
             if (radioEnglish.IsChecked == true)
             {
-                temp.Add("Language", "English");
+                product_Details_json.Add("Language", "English");
             }
             else
             {
-                temp.Add("Language", "Japanese");
+                product_Details_json.Add("Language", "Japanese");
             }
             if (radioServer.IsChecked == true)
             {
-                temp.Add("ServerType","Server");
+                product_Details_json.Add("ServerType","Server");
                 if (txtIpAdress.Text == "")
                 {
                     MessageBox.Show("IP Address is empty");
@@ -161,23 +170,23 @@ namespace Patch_Installation_tool
                     return;
                 }
                 else
-                    temp.Add("IP_Adress", txtIpAdress.Text);
+                    product_Details_json.Add("IP_Adress", txtIpAdress.Text);
             }
             else
             {
-                temp.Add("ServerType", "VM");
-                temp.Add("IP_Adress","");
+                product_Details_json.Add("ServerType", "VM");
+                product_Details_json.Add("IP_Adress","");
             }
-            temp.Add("InstallOnServer", chkInstallerPath.IsChecked.ToString());
-            temp.Add("Email", txtEmailAddr.Text.ToString());
-            var tt =  JsonConvert.SerializeObject(temp);
+            product_Details_json.Add("InstallOnServer", chkInstallerPath.IsChecked.ToString());
+            product_Details_json.Add("Email", txtEmailAddr.Text.ToString());
+            var tt =  JsonConvert.SerializeObject(product_Details_json);
             File.WriteAllText("product_Details.json", tt);
             var retStatus = ExecuteCommand("python Trigger_PatchInstallation_request.py product_Details.json");
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
             if (retStatus == 3)
                 MessageBox.Show("All the Prerequisite are not present in the \\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\ and \\\\pdlfiles\\pdlfiles\\eng\\Sustaining_Patches\\  Location!!!");
             else if (retStatus != 0)
-                MessageBox.Show("Error Contact sagar.s@efi.com !!!");
+                MessageBox.Show("Error Contact sagar.s@efi.com with product_Details.json file!!!");
             else
                 MessageBox.Show("Sucess CalculusBuild is triggered ");
         }
@@ -231,7 +240,6 @@ namespace Patch_Installation_tool
             txtPatchpath.IsEnabled = false;
             txtPatchpath.Text = "";
         }
-
         private void RadioJapanese_Checked(object sender, RoutedEventArgs e)
         {
             //Remove this code once J VM's are available...
@@ -242,7 +250,6 @@ namespace Patch_Installation_tool
                 radioVM.IsEnabled = false;
             }
         }
-
         private void RadioJapanese_Unchecked(object sender, RoutedEventArgs e)
         {
             //Remove this code once J VM's are available...
