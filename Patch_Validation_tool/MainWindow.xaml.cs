@@ -99,6 +99,19 @@ namespace Patch_Installation_tool
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //Remove this code once J VM's are available...
+            if ((GmProdList[cboProducts.SelectedIndex].OsType.Contains("Win 7")  || GmProdList[cboProducts.SelectedIndex].OsType.Contains("Window 8.1"))
+                && radioJapanese.IsChecked== true)
+            {
+                radioVM.IsChecked = false;
+                radioServer.IsChecked = true;
+                radioVM.IsEnabled = false;
+            }
+            else
+            {
+                radioVM.IsEnabled = true;
+            }
+
             if (chkInstallerPath.IsChecked == true)
                 txtBuildPath.Text = @"\\bauser\Fiery-products\Sustaining_builds\\"+cboProducts.SelectedValue.ToString()+"\\GM";
             string[] pactches = System.IO.File.ReadAllLines(@"Prod_Patch_List.txt");
@@ -211,6 +224,23 @@ namespace Patch_Installation_tool
         {
             txtPatchpath.IsEnabled = false;
             txtPatchpath.Text = "";
+        }
+
+        private void RadioJapanese_Checked(object sender, RoutedEventArgs e)
+        {
+            //Remove this code once J VM's are available...
+            if (GmProdList[cboProducts.SelectedIndex].OsType.Contains("Win 7") || GmProdList[cboProducts.SelectedIndex].OsType.Contains("Window 8.1"))
+            {
+                radioVM.IsChecked = false;
+                radioServer.IsChecked = true;
+                radioVM.IsEnabled = false;
+            }
+        }
+
+        private void RadioJapanese_Unchecked(object sender, RoutedEventArgs e)
+        {
+            //Remove this code once J VM's are available...
+            radioVM.IsEnabled = true;
         }
     }
 }

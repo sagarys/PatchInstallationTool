@@ -10,7 +10,7 @@
         <ComboBox Name="cboProducts" HorizontalAlignment="Left" Margin="76,108,0,0" VerticalAlignment="Top" Width="164" Height="28" SelectionChanged="ComboBox_SelectionChanged"/>
         <Label Content="List Of Products" HorizontalAlignment="Left" Margin="76,76,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.233,-0.215" Height="27" Width="117"/>
         <RadioButton Name="radioEnglish" GroupName="Language" Content="English" HorizontalAlignment="Left" Margin="648,406,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.415,-1.779"/>
-        <RadioButton Name="radioJapanese" GroupName="Language" Content="Japanese" HorizontalAlignment="Left" Margin="729,406,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.415,-1.779"/>
+        <RadioButton Name="radioJapanese" GroupName="Language" Content="Japanese" HorizontalAlignment="Left" Margin="729,406,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.415,-1.779" Checked="RadioJapanese_Checked" Unchecked="RadioJapanese_Unchecked"/>
         <TextBox Name ="txtBuildPath" HorizontalAlignment="Left" Height="22" Margin="76,173,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="602"/>
         <CheckBox Name="chkInstallerPath" Content="Installer Path" HorizontalAlignment="Left" Margin="76,141,0,0" VerticalAlignment="Top" Checked="ChkInstallerPath_Checked" Unchecked="ChkInstallerPath_Unchecked"/>
         <Label Content="Pre-requisites (,Sepearted) Below is the list of patches available in the \\pdlfiles-ba\pdlfiles\eng\Sustaining_Patches" HorizontalAlignment="Left" Margin="76,200,0,0" VerticalAlignment="Top" />
