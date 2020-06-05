@@ -98,7 +98,7 @@ if GMproductDetails['InstallOnServer'] == "False" :
     tests_suite_json['tests'][0].update({"target_ip":GMproductDetails['IP_Adress']})
     calculus_req_json['request'].update(tests_suite_json)
 
-f = open("cal_req.json", "w")
+f = open("cal_req.json", "w+")
 f.write(json.dumps(calculus_req_json))
 f.close()
 retStatus = subprocess.call("python apiv10.py cal_req.json") 

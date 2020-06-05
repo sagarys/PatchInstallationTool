@@ -34,7 +34,7 @@ dir_list = os.listdir(path_build)
 patch_dir= "\\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches"
 patch_list = os.listdir(patch_dir) 
 
-f1 = open("Prod_Patch_List.txt", "w")
+f1 = open("Prod_Patch_List.txt", "w+")
 patchList = {}
 
 for patch in patch_list:
@@ -46,7 +46,6 @@ for patch in patch_list:
     patchList[patch] = patchList[patch][:-1]
     f1.write(str(patch)+":"+str(patchList[patch])+'\n')
 
-print(patchList)
 f1.close()
 
 list = []
@@ -57,13 +56,10 @@ for directory in dir_list:
         if "GM" in subdir_file :
             list.append(directory)
             
-print(projects[0])
-#print(list)
-f = open("GM_Prod_List.txt", "w")
+f = open("GM_Prod_List.txt", "w+")
  
 for project_dict in projects:
     for prod in list :
-        #print(str("{name}".format(**project_dict)).replace(" ",""))
         if(str("{name}".format(**project_dict)).replace(" ","") == prod) :
              print("{name} : {server os} : {calculus name} : {oem} ".format(**project_dict))
              f.write("{name} : {server os} : {calculus name} : {oem} ".format(**project_dict) + '\n')

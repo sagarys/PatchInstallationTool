@@ -41,23 +41,29 @@ namespace Patch_Installation_tool
         }
         public void list_of_products()
         {
-            ExecuteCommand("python product.py");
-            string[] Product_list = System.IO.File.ReadAllLines(@"GM_Prod_List.txt");
-            
-            foreach (var prod in Product_list)
+            if (ExecuteCommand("python product.py") == 0)
             {
-                var prodDetails = prod.Split(':');
-                GmProdList.Add(new Gm_Product_Details(prodDetails[0].Replace(" ",""),prodDetails[1],prodDetails[2],prodDetails[3]));
-                cboProducts.Items.Add(prodDetails[0].Replace(" ", ""));
+                string[] Product_list = System.IO.File.ReadAllLines(@"GM_Prod_List.txt");
+
+                foreach (var prod in Product_list)
+                {
+                    var prodDetails = prod.Split(':');
+                    GmProdList.Add(new Gm_Product_Details(prodDetails[0].Replace(" ", ""), prodDetails[1], prodDetails[2], prodDetails[3]));
+                    cboProducts.Items.Add(prodDetails[0].Replace(" ", ""));
+                }
+                cboProducts.SelectedIndex = 0;
+                radioEnglish.IsChecked = true;
+                radioServer.IsChecked = true;
+                txtEmailAddr.Text = Environment.UserName + "@efi.com";
+                chkInstallerPath.IsChecked = true;
+                if (chkInstallerPath.IsChecked == false)
+                    txtBuildPath.IsEnabled = false;
+                txtPatchpath.IsEnabled = false;
             }
-            cboProducts.SelectedIndex = 0;
-            radioEnglish.IsChecked = true;
-            radioServer.IsChecked = true;
-            txtEmailAddr.Text = Environment.UserName+"@efi.com";
-            chkInstallerPath.IsChecked = true;
-            if (chkInstallerPath.IsChecked == false)
-                txtBuildPath.IsEnabled = false;
-            txtPatchpath.IsEnabled = false;
+            else
+            {
+                MessageBox.Show("File write error ");
+            }
         }
         public void Get_Patch_Details()
         {
@@ -165,7 +171,7 @@ namespace Patch_Installation_tool
             temp.Add("InstallOnServer", chkInstallerPath.IsChecked.ToString());
             temp.Add("Email", txtEmailAddr.Text.ToString());
             var tt =  JsonConvert.SerializeObject(temp);
-            File.WriteAllText(@"product_Details.json", tt);
+            File.WriteAllText("product_Details.json", tt);
             var retStatus = ExecuteCommand("python Trigger_PatchInstallation_request.py product_Details.json");
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
             if (retStatus == 3)
