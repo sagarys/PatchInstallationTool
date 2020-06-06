@@ -61,7 +61,6 @@ f = open("GM_Prod_List.txt", "w+")
 for project_dict in projects:
     for prod in list :
         if(str("{name}".format(**project_dict)).replace(" ","") == prod) :
-             print("{name} : {server os} : {calculus name} : {oem} ".format(**project_dict))
              f.write("{name} : {server os} : {calculus name} : {oem} ".format(**project_dict) + '\n')
             
 f.close()

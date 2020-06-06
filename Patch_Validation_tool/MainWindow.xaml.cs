@@ -63,6 +63,7 @@ namespace Patch_Installation_tool
             else
             {
                 MessageBox.Show("File write error ");
+                Environment.Exit(1);
             }
         }
         public void Get_Patch_Details()
@@ -80,20 +81,24 @@ namespace Patch_Installation_tool
                     {
                         var prereqlist = line.Split(':').Last();
                         //prereqlist = prereqlist.Remove(prereqlist.Length - 1);
-                        txtPreReq.Text = prereqlist+Path.GetFileName(txtPatchpath.Text);
+                        if (prereqlist.Trim() == "NONE")
+                        {
+                            prereqlist = "";
+                        }
+                        txtPreReq.Text = prereqlist + Path.GetFileName(txtPatchpath.Text);
                         found = true;
                         break;
                     }
                     count++;
                 }
-                if(!found)
+                if (!found)
                 {
                     MessageBox.Show("Invalid Patch !!!!!!!!!!");
                 }
             }
             else
             {
-                MessageBox.Show("Enter Patch location !!!!!");
+                MessageBox.Show("Not a valid Patch !!!!");
             }
         }
 
@@ -106,8 +111,8 @@ namespace Patch_Installation_tool
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //Remove this code once J VM's are available...
-            if ((GmProdList[cboProducts.SelectedIndex].OsType.Contains("Win 7")  || GmProdList[cboProducts.SelectedIndex].OsType.Contains("Window 8.1"))
-                && radioJapanese.IsChecked== true)
+            if ((GmProdList[cboProducts.SelectedIndex].OsType.Contains("Win 7") || GmProdList[cboProducts.SelectedIndex].OsType.Contains("Window 8.1"))
+                && radioJapanese.IsChecked == true)
             {
                 radioVM.IsChecked = false;
                 radioServer.IsChecked = true;
@@ -119,12 +124,12 @@ namespace Patch_Installation_tool
             }
 
             if (chkInstallerPath.IsChecked == true)
-                txtBuildPath.Text = @"\\bauser\Fiery-products\Sustaining_builds\\"+cboProducts.SelectedValue.ToString()+"\\GM";
+                txtBuildPath.Text = @"\\bauser\Fiery-products\Sustaining_builds\\" + cboProducts.SelectedValue.ToString() + "\\GM";
             string[] pactches = System.IO.File.ReadAllLines(@"Prod_Patch_List.txt");
             foreach (var preq in pactches)
             {
                 var prod = preq.Split(':').First();
-                if(prod == cboProducts.SelectedValue.ToString())
+                if (prod == cboProducts.SelectedValue.ToString())
                 {
                     var patchList = preq.Split(':').Last();
                     txtPrereqFrmPdl.Text = patchList;
@@ -137,14 +142,35 @@ namespace Patch_Installation_tool
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var txtrrereq = txtPreReq.Text.Split(',');
-            foreach(var prereq in txtrrereq)
+            foreach (var prereq in txtrrereq)
             {
-                if(!txtPrereqFrmPdl.Text.Contains(prereq))
+                if (!txtPrereqFrmPdl.Text.Contains(prereq))
                 {
                     MessageBox.Show(prereq + " Not present in the \\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\");
                     return;
                 }
             }
+            if (chkPatchLoc.IsChecked == true)
+            {
+                if (txtPatchpath.Text != "")
+                {
+                    var pdlloc = "\\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\" + cboProducts.SelectedValue;
+                    var copyPatch = "copy_file.bat " + "\"" + Path.GetDirectoryName(txtPatchpath.Text) + "\"" +
+                                                          " \"" + pdlloc + "\"" + " \"" + Path.GetFileName(txtPatchpath.Text) + "\"" +
+                                                          " " + Path.GetFileName(txtPatchpath.Text) + ".txt\"";
+                    if (ExecuteCommand(copyPatch) != 0)
+                    {
+                        MessageBox.Show("Patch " + Path.GetFileName(txtPatchpath.Text) + " copy failed to \\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\");
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Patch location is empty");
+                    return;
+                }
+            }
+
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             Dictionary<string, string> product_Details_json = new Dictionary<string, string>();
             product_Details_json.Add("Product", cboProducts.SelectedValue.ToString());
@@ -162,7 +188,7 @@ namespace Patch_Installation_tool
             }
             if (radioServer.IsChecked == true)
             {
-                product_Details_json.Add("ServerType","Server");
+                product_Details_json.Add("ServerType", "Server");
                 if (txtIpAdress.Text == "")
                 {
                     MessageBox.Show("IP Address is empty");
@@ -175,11 +201,11 @@ namespace Patch_Installation_tool
             else
             {
                 product_Details_json.Add("ServerType", "VM");
-                product_Details_json.Add("IP_Adress","");
+                product_Details_json.Add("IP_Adress", "");
             }
             product_Details_json.Add("InstallOnServer", chkInstallerPath.IsChecked.ToString());
             product_Details_json.Add("Email", txtEmailAddr.Text.ToString());
-            var tt =  JsonConvert.SerializeObject(product_Details_json);
+            var tt = JsonConvert.SerializeObject(product_Details_json);
             File.WriteAllText("product_Details.json", tt);
             var retStatus = ExecuteCommand("python Trigger_PatchInstallation_request.py product_Details.json");
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
