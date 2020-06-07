@@ -146,6 +146,8 @@ namespace Patch_Installation_tool
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if(radioFremont.IsChecked == true)
+                copyBuildToSyncServer();
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             if (chkPatchLoc.IsChecked == true)
             {
@@ -294,9 +296,9 @@ namespace Patch_Installation_tool
             radioVM.IsEnabled = true;
         }
 
-        private void RadioFremont_Checked(object sender, RoutedEventArgs e)
+        private void copyBuildToSyncServer()
         {
-            MessageBoxResult m = MessageBox.Show("Build needs to be copied into the sync server","Build Copy !!!", MessageBoxButton.YesNo);
+            MessageBoxResult m = MessageBox.Show("Build needs to be copied into the sync server", "Build Copy !!!", MessageBoxButton.YesNo);
             if (m == MessageBoxResult.Yes)
             {
                 chkPatchLoc.IsChecked = false;
@@ -319,11 +321,15 @@ namespace Patch_Installation_tool
                 else
                 {
                     MessageBox.Show("Build copied to sync server ....Please check after 30 mn in the below location " +
-                        "\\\\fcwdfs01\\INBOX\\FROM-BLR\\Sustaining_Builds\\ "+ cboProducts.SelectedValue.ToString()+"!!!");
+                        "\\\\fcwdfs01\\INBOX\\FROM-BLR\\Sustaining_Builds\\ " + cboProducts.SelectedValue.ToString() + "!!!");
                     Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
                     Environment.Exit(2);
                 }
             }
+        }
+        private void RadioFremont_Checked(object sender, RoutedEventArgs e)
+        {
+            copyBuildToSyncServer();
         }
 
         private void RadioBangalore_Checked(object sender, RoutedEventArgs e)

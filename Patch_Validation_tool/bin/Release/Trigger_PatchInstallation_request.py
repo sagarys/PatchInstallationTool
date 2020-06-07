@@ -64,10 +64,12 @@ def checkpreq(podname,prereqList) :
     if not os.path.isdir(os.path.join(patch_dir,podname)) :
         return
     patchList = os.listdir(os.path.join(patch_dir,podname))
-    prereqListArr = prereqList.split(',')
-    for prereq in prereqListArr :
-        if prereq not in patchList :
-            sys.exit(3)
+    if prereqList != '' :
+        prereqListArr = prereqList.split(',')
+        if len(prereqListArr) != 0 :
+            for prereq in prereqListArr :
+                if prereq not in patchList :
+                    sys.exit(3)
             
 checkpreq(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
 updatePatchTestSuite(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
