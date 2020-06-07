@@ -69,6 +69,9 @@ namespace Patch_Installation_tool
         }
         public void Get_Patch_Details()
         {
+            if (txtPatchpath.Text != "")
+                return;
+
             string line;
             bool found = false;
             int count = 0;
