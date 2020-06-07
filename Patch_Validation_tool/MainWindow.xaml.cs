@@ -141,15 +141,6 @@ namespace Patch_Installation_tool
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var txtrrereq = txtPreReq.Text.Split(',');
-            foreach (var prereq in txtrrereq)
-            {
-                if (!txtPrereqFrmPdl.Text.Contains(prereq))
-                {
-                    MessageBox.Show(prereq + " Not present in the \\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\");
-                    return;
-                }
-            }
             if (chkPatchLoc.IsChecked == true)
             {
                 if (txtPatchpath.Text != "")
@@ -167,6 +158,16 @@ namespace Patch_Installation_tool
                 else
                 {
                     MessageBox.Show("Patch location is empty");
+                    return;
+                }
+            }
+
+            var txtrrereq = txtPreReq.Text.Split(',');
+            foreach (var prereq in txtrrereq)
+            {
+                if (!txtPrereqFrmPdl.Text.Contains(prereq))
+                {
+                    MessageBox.Show(prereq + " Not present in the \\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\");
                     return;
                 }
             }
