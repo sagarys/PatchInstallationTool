@@ -59,9 +59,12 @@ def updatePatchTestSuite(prodname,prereqList):
         
 def checkpreq(podname,prereqList) :
     patch_dir= "\\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches"
+    if not os.path.isdir(os.path.join(patch_dir,podname)) and GMproductDetails['Prerequisite'] != '':
+        sys.exit(4)
+    if not os.path.isdir(os.path.join(patch_dir,podname)) :
+        return
     patchList = os.listdir(os.path.join(patch_dir,podname))
     prereqListArr = prereqList.split(',')
-    print(prereqListArr)
     for prereq in prereqListArr :
         if prereq not in patchList :
             sys.exit(3)

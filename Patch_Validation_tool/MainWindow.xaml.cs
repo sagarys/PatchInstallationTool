@@ -59,6 +59,7 @@ namespace Patch_Installation_tool
                 if (chkInstallerPath.IsChecked == false)
                     txtBuildPath.IsEnabled = false;
                 txtPatchpath.IsEnabled = false;
+                //radioBangalore.IsChecked = true;
             }
             else
             {
@@ -126,6 +127,7 @@ namespace Patch_Installation_tool
             if (chkInstallerPath.IsChecked == true)
                 txtBuildPath.Text = @"\\bauser\Fiery-products\Sustaining_builds\\" + cboProducts.SelectedValue.ToString() + "\\GM";
             string[] pactches = System.IO.File.ReadAllLines(@"Prod_Patch_List.txt");
+            var found = false;
             foreach (var preq in pactches)
             {
                 var prod = preq.Split(':').First();
@@ -133,14 +135,18 @@ namespace Patch_Installation_tool
                 {
                     var patchList = preq.Split(':').Last();
                     txtPrereqFrmPdl.Text = patchList;
+                    found = true;
                     break;
                 }
             }
+            if (!found)
+                txtPrereqFrmPdl.Text = "";
             txtPreReq.Text = "";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             if (chkPatchLoc.IsChecked == true)
             {
                 if (txtPatchpath.Text != "")
@@ -152,12 +158,14 @@ namespace Patch_Installation_tool
                     if (ExecuteCommand(copyPatch) != 0)
                     {
                         MessageBox.Show("Patch " + Path.GetFileName(txtPatchpath.Text) + " copy failed to \\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\");
+                        Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
                         return;
                     }
                 }
                 else
                 {
                     MessageBox.Show("Patch location is empty");
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
                     return;
                 }
             }
@@ -168,11 +176,11 @@ namespace Patch_Installation_tool
                 if (!txtPrereqFrmPdl.Text.Contains(prereq))
                 {
                     MessageBox.Show(prereq + " Not present in the \\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\");
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
                     return;
                 }
             }
 
-            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             Dictionary<string, string> product_Details_json = new Dictionary<string, string>();
             product_Details_json.Add("Product", cboProducts.SelectedValue.ToString());
             product_Details_json.Add("calculus_name", GmProdList[cboProducts.SelectedIndex].CalculusName);
@@ -210,6 +218,9 @@ namespace Patch_Installation_tool
             File.WriteAllText("product_Details.json", tt);
             var retStatus = ExecuteCommand("python Trigger_PatchInstallation_request.py product_Details.json");
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
+            if (retStatus == 4)
+                MessageBox.Show(cboProducts.SelectedValue.ToString() + " Fodler does not exists in the " +
+                                "\\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\ and \\\\pdlfiles\\pdlfiles\\eng\\Sustaining_Patches\\  Location!!!");
             if (retStatus == 3)
                 MessageBox.Show("All the Prerequisite are not present in the \\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches\\ and \\\\pdlfiles\\pdlfiles\\eng\\Sustaining_Patches\\  Location!!!");
             else if (retStatus != 0)
@@ -282,5 +293,27 @@ namespace Patch_Installation_tool
             //Remove this code once J VM's are available...
             radioVM.IsEnabled = true;
         }
+
+        //private void RadioFremont_Checked(object sender, RoutedEventArgs e)
+        //{
+        //    Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+        //    var syncserverLoc = "\\\\bawdfs01\\OUTBOX\\TO-FC\\Sustaining_Builds";
+        //    var installerPath = txtBuildPath.Text;
+        //    var copyBuild = "copy_dir.bat " + "\"" + txtBuildPath.Text + "\"" +
+        //                                          " \"" + Path.Combine(syncserverLoc,cboProducts.SelectedValue.ToString()) + "\"" +
+        //                                          " " + cboProducts.SelectedValue.ToString() + ".txt\"";
+        //    if (ExecuteCommand(copyBuild) != 0)
+        //    {
+        //        MessageBox.Show("Build copy failed to sync server \\\\bawdfs01\\OUTBOX\\TO-FC\\Sustaining_Builds");
+        //        Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("Build copied to sync server ....Please check after 30 mn !!!");
+        //        Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
+        //        Environment.Exit(2);
+        //    }
+        //}
     }
 }

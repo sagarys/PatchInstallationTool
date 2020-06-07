@@ -13,5 +13,11 @@ namespace Patch_Installation_tool
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            MessageBox.Show("Patch Validation Tool takes 3 min to start !!!!!");
+            var myMainWindow = new MainWindow();
+            myMainWindow.ShowDialog();
+        }
     }
 }
