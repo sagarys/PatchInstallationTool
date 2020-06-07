@@ -19,7 +19,7 @@
         <TextBox Name="txtIpAdress" HorizontalAlignment="Left" Height="28" Margin="76,393,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="178"/>
         <Label Content="Language" HorizontalAlignment="Left" Margin="648,374,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.094,-0.148"/>
         <RadioButton Name="radioVM" GroupName="Servertype" Content="VM" HorizontalAlignment="Left" Margin="76,336,0,0" VerticalAlignment="Top" Checked="RadioVM_Checked"/>
-        <RadioButton Name="radioServer" GroupName="Servertype" Content="Server" HorizontalAlignment="Left" Margin="141,336,0,0" VerticalAlignment="Top" Checked="RadioServer_Checked" />
+        <RadioButton Name="radioServer" GroupName="Servertype" Content="VM__IP" HorizontalAlignment="Left" Margin="141,336,0,0" VerticalAlignment="Top" Checked="RadioServer_Checked" />
         <Label Content="Install On" HorizontalAlignment="Left" Margin="76,305,0,0" VerticalAlignment="Top" Height="26" Width="62" RenderTransformOrigin="0.495,1.133"/>
         <TextBox Name="txtEmailAddr" HorizontalAlignment="Left" Height="28" Margin="480,108,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="198"/>
         <Label Content="Email-Address" HorizontalAlignment="Left" Margin="480,81,0,0" VerticalAlignment="Top" Height="27" Width="122"/>
@@ -27,8 +27,8 @@
         <TextBox Name ="txtPrereqFrmPdl" HorizontalAlignment="Left" Height="45" Margin="76,231,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="864" IsReadOnly="True" BorderThickness="0"/>
         <TextBox Name="txtPatchpath" HorizontalAlignment="Left" Height="23" Margin="76,53,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="478" LostFocus="TxtPatchpath_LostFocus"/>
         <CheckBox Name="chkPatchLoc" Content="Patch Location" HorizontalAlignment="Left" Margin="76,33,0,0" VerticalAlignment="Top" Checked="ChkPatchLoc_Checked" Unchecked="ChkPatchLoc_Unchecked"/>
-        <!--<RadioButton Name="radioBangalore" Content="Bangalore" GroupName ="Location" HorizontalAlignment="Left" Margin="705,53,0,0" VerticalAlignment="Top"/>
+        <RadioButton Name="radioBangalore" Content="Bangalore" GroupName ="Location" HorizontalAlignment="Left" Margin="705,53,0,0" VerticalAlignment="Top" Checked="RadioBangalore_Checked"/>
         <RadioButton Name="radioFremont" Content="Fremont" GroupName ="Location" HorizontalAlignment="Left" Margin="840,53,0,0" VerticalAlignment="Top" Checked="RadioFremont_Checked"/>
-        <Label Content="Location" HorizontalAlignment="Left" Margin="705,27,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.417,0.195" Height="26" Width="69"/>-->
+        <Label Content="Location" HorizontalAlignment="Left" Margin="705,27,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.417,0.195" Height="26" Width="69"/>
     </Grid>
 </Window>

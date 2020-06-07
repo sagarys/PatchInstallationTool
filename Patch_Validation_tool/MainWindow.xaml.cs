@@ -59,7 +59,7 @@ namespace Patch_Installation_tool
                 if (chkInstallerPath.IsChecked == false)
                     txtBuildPath.IsEnabled = false;
                 txtPatchpath.IsEnabled = false;
-                //radioBangalore.IsChecked = true;
+                radioBangalore.IsChecked = true;
             }
             else
             {
@@ -294,26 +294,42 @@ namespace Patch_Installation_tool
             radioVM.IsEnabled = true;
         }
 
-        //private void RadioFremont_Checked(object sender, RoutedEventArgs e)
-        //{
-        //    Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-        //    var syncserverLoc = "\\\\bawdfs01\\OUTBOX\\TO-FC\\Sustaining_Builds";
-        //    var installerPath = txtBuildPath.Text;
-        //    var copyBuild = "copy_dir.bat " + "\"" + txtBuildPath.Text + "\"" +
-        //                                          " \"" + Path.Combine(syncserverLoc,cboProducts.SelectedValue.ToString()) + "\"" +
-        //                                          " " + cboProducts.SelectedValue.ToString() + ".txt\"";
-        //    if (ExecuteCommand(copyBuild) != 0)
-        //    {
-        //        MessageBox.Show("Build copy failed to sync server \\\\bawdfs01\\OUTBOX\\TO-FC\\Sustaining_Builds");
-        //        Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
-        //        return;
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Build copied to sync server ....Please check after 30 mn !!!");
-        //        Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
-        //        Environment.Exit(2);
-        //    }
-        //}
+        private void RadioFremont_Checked(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult m = MessageBox.Show("Build needs to be copied into the sync server","Build Copy !!!", MessageBoxButton.YesNo);
+            if (m == MessageBoxResult.Yes)
+            {
+                chkPatchLoc.IsChecked = false;
+                chkPatchLoc.IsEnabled = false;
+                txtPatchpath.Text = "";
+                txtPreReq.Text = "";
+                txtPreReq.IsEnabled = false;
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                var syncserverLoc = "\\\\bawdfs01\\OUTBOX\\TO-FC\\Sustaining_Builds";
+                var installerPath = txtBuildPath.Text;
+                var copyBuild = "copy_dir.bat " + "\"" + txtBuildPath.Text + "\"" +
+                                                      " \"" + Path.Combine(syncserverLoc, cboProducts.SelectedValue.ToString()) + "\"" +
+                                                      " " + cboProducts.SelectedValue.ToString() + ".txt\"";
+                if (ExecuteCommand(copyBuild) != 0)
+                {
+                    MessageBox.Show("Build copy failed to sync server \\\\bawdfs01\\OUTBOX\\TO-FC\\Sustaining_Builds");
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
+                    return;
+                }
+                else
+                {
+                    MessageBox.Show("Build copied to sync server ....Please check after 30 mn in the below location " +
+                        "\\\\fcwdfs01\\INBOX\\FROM-BLR\\Sustaining_Builds\\ "+ cboProducts.SelectedValue.ToString()+"!!!");
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow; // set the cursor back to arrow
+                    Environment.Exit(2);
+                }
+            }
+        }
+
+        private void RadioBangalore_Checked(object sender, RoutedEventArgs e)
+        {
+            chkPatchLoc.IsEnabled = true;
+            txtPreReq.IsEnabled = true;
+        }
     }
 }
