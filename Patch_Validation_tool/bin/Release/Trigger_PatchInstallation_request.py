@@ -60,14 +60,18 @@ tests_suite_req = json.loads(ss)
 def calculusRequest () :
     calculus_req_json['request']['name'] = GMproductDetails['Product']
     calculus_req_json['request']['email_list'] = GMproductDetails['Email']
-    calculus_req_json['request']['user'] = GMproductDetails['Email'].split(':')[0]
+    calculus_req_json['request']['user'] = GMproductDetails['Email'].split('@')[0]
     
 def cffEnable() :
+    calculus_req_json['request']['name'] = calculus_req_json['request']['name'] + "_CFF_Enable"
+    tests_suite_json['tests'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
     if GMproductDetails['ServerType'] == 'Server' :
         patch_req_json['suite'].append({"exe":"CFF_Enable","timeout_seconds" : 8000})
         patch_req_json['suite'].append({"exe":"reboot", "timeout_seconds":8000})
         patch_req_json['suite'].append({"exe":"wait_ready", "timeout_seconds":8000})
     tests_suite_json['tests'][0].update(patch_req_json)
+    tests_suite_json['tests'][0].update({"target_ip":GMproductDetails['IP_Adress']})
+    calculus_req_json['request'].update(tests_suite_json)
         
 def updatePatchTestSuite(prodname,prereqList):
     if prereqList != '' :  
@@ -93,15 +97,6 @@ def checkpreq(podname,prereqList) :
                 if prereq not in patchList :
                     sys.exit(3)
 
-# def storeInstallerLoc(installerPath,ipAddress) :
-     # install_file = "\\\\BAWIBLD43\\bldtmp\\sagars\\Patch_Validation_tool" 
-     # f = open(ipAddress+".txt", "w+")
-     # f.write(installerPath + '\n')
-     # f.close()
-     # fileCopy ="copy_file.bat "+ os.getcwd() +" " +"\""+ install_file +"\""+" "+ ipAddress+".txt" + " "+ipAddress+"_log.txt"
-     # print(fileCopy)
-     # subprocess.call(fileCopy)
-
 def installOnServer(installerPath) :
     install_req_json['installs'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
     install_req_json['installs'][0]['installer_url'] = str(GMproductDetails['Installer_path'])
@@ -113,11 +108,21 @@ def installOnVM(installerPath) :
     install_req_json['installs'][0]['installer_url'] = str(GMproductDetails['Installer_path'])
     install_req_json['installs'][0].update({"livelink":"true"})
     calculus_req_json['request'].update(install_req_json)
-
+    
 checkpreq(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
 calculusRequest()
 
-
+if GMproductDetails['Enable_CFF'] == 'True' :
+    cffEnable()
+    f = open("cal_req.json", "w+")
+    f.write(json.dumps(calculus_req_json))
+    f.close()
+    retStatus = subprocess.call("python apiv10.py cal_req.json Enable_CFF") 
+    if retStatus == 1 :
+        sys.exit(1)
+    else :
+        sys.exit(0)
+        
 if GMproductDetails['WithInstaller'] == 'True' :
     if(GMproductDetails['ServerType'] ==  'Server') :
         installOnServer(GMproductDetails['Installer_path'])
@@ -130,6 +135,7 @@ if GMproductDetails['WithInstaller'] == 'False' :
     if GMproductDetails['Prerequisite'] == '' :
         sys.exit(5)
     else :
+        tests_suite_json['tests'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
         tests_suite_json['tests'][0].update({"target_ip":GMproductDetails['IP_Adress']})
         updatePatchTestSuite(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
     
