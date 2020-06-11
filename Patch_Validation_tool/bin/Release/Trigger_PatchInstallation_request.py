@@ -69,13 +69,14 @@ def cffEnable() :
         patch_req_json['suite'].append({"exe":"CFF_Enable","timeout_seconds" : 8000})
         patch_req_json['suite'].append({"exe":"reboot", "timeout_seconds":8000})
         patch_req_json['suite'].append({"exe":"wait_ready", "timeout_seconds":8000})
-    tests_suite_json['tests'][0].update(patch_req_json)
     tests_suite_json['tests'][0].update({"target_ip":GMproductDetails['IP_Adress']})
+    tests_suite_json['tests'][0].update(patch_req_json)
     calculus_req_json['request'].update(tests_suite_json)
         
 def updatePatchTestSuite(prodname,prereqList):
     if prereqList != '' :  
         temp = prereqList.split(',')
+        tests_suite_json['tests'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
         for patch in temp:
             patch_req_json['suite'].append({"exe":"testFierys","timeout_seconds" : 8000,"arguments":"-z1 -f /efi/pdlfiles/eng/Sustaining_Patches/"+prodname+"/"+patch})
             patch_req_json['suite'].append({"exe":"reboot", "timeout_seconds":8000})
@@ -135,7 +136,6 @@ if GMproductDetails['WithInstaller'] == 'False' :
     if GMproductDetails['Prerequisite'] == '' :
         sys.exit(5)
     else :
-        tests_suite_json['tests'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
         tests_suite_json['tests'][0].update({"target_ip":GMproductDetails['IP_Adress']})
         updatePatchTestSuite(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
     
