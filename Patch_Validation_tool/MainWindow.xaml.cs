@@ -217,6 +217,10 @@ namespace Patch_Installation_tool
                 product_Details_json.Add("ServerType", "VM");
                 product_Details_json.Add("IP_Adress", "");
             }
+            if(chkenbleSSH.IsChecked == true)
+                product_Details_json.Add("Enable_CFF", "True");
+            else
+                product_Details_json.Add("Enable_CFF", "False");
             product_Details_json.Add("WithInstaller", chkInstallerPath.IsChecked.ToString());
             product_Details_json.Add("Email", txtEmailAddr.Text.ToString());
             var tt = JsonConvert.SerializeObject(product_Details_json);
@@ -242,6 +246,7 @@ namespace Patch_Installation_tool
         private void RadioServer_Checked(object sender, RoutedEventArgs e)
         {
             txtIpAdress.IsEnabled = true;
+            chkenbleSSH.IsEnabled = true;
         }
 
         private void ChkInstallerPath_Checked(object sender, RoutedEventArgs e)
@@ -339,6 +344,10 @@ namespace Patch_Installation_tool
         {
             chkPatchLoc.IsEnabled = true;
             txtPreReq.IsEnabled = true;
+        }
+        private void RadioServer_Unchecked(object sender, RoutedEventArgs e)
+        {
+            chkenbleSSH.IsEnabled = false;
         }
     }
 }
