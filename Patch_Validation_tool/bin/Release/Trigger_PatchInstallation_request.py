@@ -136,6 +136,6 @@ if GMproductDetails['WithInstaller'] == 'False' :
 f = open("cal_req.json", "w+")
 f.write(json.dumps(calculus_req_json))
 f.close()
-# retStatus = subprocess.call("python apiv10.py cal_req.json") 
-# if retStatus == 1 :
-    # sys.exit(1)
+retStatus = subprocess.call("python apiv10.py cal_req.json") 
+if retStatus == 1 :
+    sys.exit(1)
