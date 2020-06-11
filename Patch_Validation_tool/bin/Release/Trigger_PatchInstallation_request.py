@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os
-import requests
 import sys
 import pprint
 import subprocess
@@ -32,6 +31,7 @@ install_req_json={
       }
     ],
 }
+
 tests_suite_json = {
 "tests" : [
       {
@@ -48,14 +48,36 @@ patch_req_json = {
         ] 
 }
 
-def updatePatchTestSuite(prodname,prereqList):
-    patchLocation = "-z1 -f /efi/pdlfiles/eng/Sustaining_Patches/"+"\\prodname"
-    temp = prereqList.split(',')
-    for patch in temp:
-        patch_req_json['suite'].append({"exe":"testFierys","timeout_seconds" : 8000,"arguments":"-z1 -f /efi/pdlfiles/eng/Sustaining_Patches/"+prodname+"/"+patch})
+ss = json.dumps(calculus_req_json)
+calculus_req = json.loads(ss)
+
+ss = json.dumps(install_req_json)
+install_req = json.loads(ss)
+
+ss = json.dumps(tests_suite_json)
+tests_suite_req = json.loads(ss)
+
+def calculusRequest () :
+    calculus_req_json['request']['name'] = GMproductDetails['Product']
+    calculus_req_json['request']['email_list'] = GMproductDetails['Email']
+    calculus_req_json['request']['user'] = GMproductDetails['Email'].split(':')[0]
+    
+def cffEnable() :
+    if GMproductDetails['ServerType'] == 'Server' :
+        patch_req_json['suite'].append({"exe":"CFF_Enable","timeout_seconds" : 8000})
         patch_req_json['suite'].append({"exe":"reboot", "timeout_seconds":8000})
         patch_req_json['suite'].append({"exe":"wait_ready", "timeout_seconds":8000})
     tests_suite_json['tests'][0].update(patch_req_json)
+        
+def updatePatchTestSuite(prodname,prereqList):
+    if prereqList != '' :  
+        temp = prereqList.split(',')
+        for patch in temp:
+            patch_req_json['suite'].append({"exe":"testFierys","timeout_seconds" : 8000,"arguments":"-z1 -f /efi/pdlfiles/eng/Sustaining_Patches/"+prodname+"/"+patch})
+            patch_req_json['suite'].append({"exe":"reboot", "timeout_seconds":8000})
+            patch_req_json['suite'].append({"exe":"wait_ready", "timeout_seconds":8000})
+        tests_suite_json['tests'][0].update(patch_req_json)
+        calculus_req_json['request'].update(tests_suite_json)
         
 def checkpreq(podname,prereqList) :
     patch_dir= "\\\\pdlfiles-ba\\pdlfiles\\eng\\Sustaining_Patches"
@@ -70,42 +92,50 @@ def checkpreq(podname,prereqList) :
             for prereq in prereqListArr :
                 if prereq not in patchList :
                     sys.exit(3)
-            
-checkpreq(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
-updatePatchTestSuite(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
 
-ss = json.dumps(calculus_req_json)
-calculus_req = json.loads(ss)
+# def storeInstallerLoc(installerPath,ipAddress) :
+     # install_file = "\\\\BAWIBLD43\\bldtmp\\sagars\\Patch_Validation_tool" 
+     # f = open(ipAddress+".txt", "w+")
+     # f.write(installerPath + '\n')
+     # f.close()
+     # fileCopy ="copy_file.bat "+ os.getcwd() +" " +"\""+ install_file +"\""+" "+ ipAddress+".txt" + " "+ipAddress+"_log.txt"
+     # print(fileCopy)
+     # subprocess.call(fileCopy)
 
-ss = json.dumps(install_req_json)
-install_req = json.loads(ss)
-
-ss = json.dumps(tests_suite_json)
-tests_suite_req = json.loads(ss)
-
-calculus_req_json['request']['email_list'] = GMproductDetails['Email']
-if GMproductDetails['IP_Adress'] != "":
+def installOnServer(installerPath) :
+    install_req_json['installs'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
+    install_req_json['installs'][0]['installer_url'] = str(GMproductDetails['Installer_path'])
     install_req_json['installs'][0].update({"target_ip":GMproductDetails['IP_Adress']})
-else:
-    install_req_json['installs'][0].update({"livelink":"true"})
-    if GMproductDetails['Language'] == "Japanese" and "Windows 10"in GMproductDetails['osType'] :
-        install_req_json['installs'][0].update({"vm_template":"Calculus win1064.5.2.1.2 J"})
-
-calculus_req_json['request']['name'] = GMproductDetails['Product']
-install_req_json['installs'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
-install_req_json['installs'][0]['installer_url'] = str(GMproductDetails['Installer_patch'])
-tests_suite_json['tests'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
-
-if GMproductDetails['InstallOnServer'] == "True" :
     calculus_req_json['request'].update(install_req_json)
 
-if GMproductDetails['InstallOnServer'] == "False" :
-    tests_suite_json['tests'][0].update({"target_ip":GMproductDetails['IP_Adress']})
-    calculus_req_json['request'].update(tests_suite_json)
+def installOnVM(installerPath) :
+    install_req_json['installs'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
+    install_req_json['installs'][0]['installer_url'] = str(GMproductDetails['Installer_path'])
+    install_req_json['installs'][0].update({"livelink":"true"})
+    calculus_req_json['request'].update(install_req_json)
 
+checkpreq(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
+calculusRequest()
+
+
+if GMproductDetails['WithInstaller'] == 'True' :
+    if(GMproductDetails['ServerType'] ==  'Server') :
+        installOnServer(GMproductDetails['Installer_path'])
+    if(GMproductDetails['ServerType'] ==  'VM') :
+        installOnVM(GMproductDetails['Installer_path'])
+    if GMproductDetails['Prerequisite'] != '' :
+        updatePatchTestSuite(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
+
+if GMproductDetails['WithInstaller'] == 'False' :
+    if GMproductDetails['Prerequisite'] == '' :
+        sys.exit(5)
+    else :
+        tests_suite_json['tests'][0].update({"target_ip":GMproductDetails['IP_Adress']})
+        updatePatchTestSuite(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
+    
 f = open("cal_req.json", "w+")
 f.write(json.dumps(calculus_req_json))
 f.close()
-retStatus = subprocess.call("python apiv10.py cal_req.json") 
-if retStatus == 1 :
-    sys.exit(1)
+# retStatus = subprocess.call("python apiv10.py cal_req.json") 
+# if retStatus == 1 :
+    # sys.exit(1)

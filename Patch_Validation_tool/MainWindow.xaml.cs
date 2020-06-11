@@ -190,7 +190,7 @@ namespace Patch_Installation_tool
             product_Details_json.Add("Product", cboProducts.SelectedValue.ToString());
             product_Details_json.Add("calculus_name", GmProdList[cboProducts.SelectedIndex].CalculusName);
             product_Details_json.Add("osType", GmProdList[cboProducts.SelectedIndex].OsType);
-            product_Details_json.Add("Installer_patch", txtBuildPath.Text.ToString());
+            product_Details_json.Add("Installer_path", txtBuildPath.Text.ToString());
             product_Details_json.Add("Prerequisite", txtPreReq.Text.ToString());
             if (radioEnglish.IsChecked == true)
             {
@@ -217,7 +217,7 @@ namespace Patch_Installation_tool
                 product_Details_json.Add("ServerType", "VM");
                 product_Details_json.Add("IP_Adress", "");
             }
-            product_Details_json.Add("InstallOnServer", chkInstallerPath.IsChecked.ToString());
+            product_Details_json.Add("WithInstaller", chkInstallerPath.IsChecked.ToString());
             product_Details_json.Add("Email", txtEmailAddr.Text.ToString());
             var tt = JsonConvert.SerializeObject(product_Details_json);
             File.WriteAllText("product_Details.json", tt);
