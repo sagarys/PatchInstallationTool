@@ -18,7 +18,7 @@ namespace Patch_Installation_tool
         private static List<Gm_Product_Details> gmProdList = new List<Gm_Product_Details>();
 
         internal static List<Gm_Product_Details> GmProdList { get => gmProdList; set => gmProdList = value; }
-
+        internal const string BUILD_PATH = @"\\bauser\Fiery-products\Sustaining_builds\\";
         public static int ExecuteCommand(string command)
         {
             var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command);
@@ -60,6 +60,7 @@ namespace Patch_Installation_tool
                     txtBuildPath.IsEnabled = false;
                 txtPatchpath.IsEnabled = false;
                 radioBangalore.IsChecked = true;
+                radioGM.IsChecked = true;
             }
             else
             {
@@ -133,7 +134,14 @@ namespace Patch_Installation_tool
             }
 
             if (chkInstallerPath.IsChecked == true)
-                txtBuildPath.Text = @"\\bauser\Fiery-products\Sustaining_builds\\" + cboProducts.SelectedValue.ToString() + "\\GM";
+            {
+                if (radioGM.IsChecked == true)
+                    txtBuildPath.Text = Path.Combine(BUILD_PATH, cboProducts.SelectedValue.ToString(), "GM");
+                if (radioDebug.IsChecked == true)
+                    txtBuildPath.Text = Path.Combine(BUILD_PATH, cboProducts.SelectedValue.ToString(), "Debug");
+                if (radioRelease.IsChecked == true)
+                    txtBuildPath.Text = Path.Combine(BUILD_PATH, cboProducts.SelectedValue.ToString(), "Release");
+            }
             string[] pactches = System.IO.File.ReadAllLines(@"Prod_Patch_List.txt");
             var found = false;
             foreach (var preq in pactches)
@@ -354,6 +362,32 @@ namespace Patch_Installation_tool
         private void RadioServer_Unchecked(object sender, RoutedEventArgs e)
         {
             chkenbleSSH.IsEnabled = false;
+        }
+
+        private void RadioButtonDebug_Checked(object sender, RoutedEventArgs e)
+        {
+            txtBuildPath.Text = "";
+            txtBuildPath.Text = Path.Combine(BUILD_PATH, cboProducts.SelectedValue.ToString(), "Debug");
+            txtBuildPath.IsEnabled = false;
+        }
+
+        private void RadioButtonRelease_Checked(object sender, RoutedEventArgs e)
+        {
+            txtBuildPath.Text = "";
+            txtBuildPath.Text = Path.Combine(BUILD_PATH, cboProducts.SelectedValue.ToString(), "Release");
+            txtBuildPath.IsEnabled = false;
+        }
+
+        private void RadioButtonGM_Checked(object sender, RoutedEventArgs e)
+        {
+            txtBuildPath.Text = "";
+            txtBuildPath.Text = Path.Combine(BUILD_PATH, cboProducts.SelectedValue.ToString(), "GM");
+            txtBuildPath.IsEnabled = false;
+        }
+
+        private void RadioButtonCustom_Checked(object sender, RoutedEventArgs e)
+        {
+            txtBuildPath.IsEnabled = true;
         }
     }
 }
