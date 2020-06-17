@@ -81,6 +81,10 @@ def updatePatchTestSuite(prodname,prereqList):
             patch_req_json['suite'].append({"exe":"testFierys","timeout_seconds" : 8000,"arguments":"-z1 -f /efi/pdlfiles/eng/Sustaining_Patches/"+prodname+"/"+patch})
             patch_req_json['suite'].append({"exe":"reboot", "timeout_seconds":8000})
             patch_req_json['suite'].append({"exe":"wait_ready", "timeout_seconds":8000})
+        
+        if GMproductDetails['ServerType'] ==  'VM' :
+            patch_req_json['suite'].append({"exe":"sleeper", "timeout_seconds":8000})
+        
         tests_suite_json['tests'][0].update(patch_req_json)
         calculus_req_json['request'].update(tests_suite_json)
         
@@ -109,9 +113,16 @@ def installOnVM(installerPath) :
     install_req_json['installs'][0]['installer_url'] = str(GMproductDetails['Installer_path'])
     install_req_json['installs'][0].update({"livelink":"true"})
     calculus_req_json['request'].update(install_req_json)
-    
+
+def checkOSAndlang() :
+    if GMproductDetails['ServerType'] ==  'VM' :
+        if(GMproductDetails['Language'] == 'Japanese' and "Windows 10" in GMproductDetails['osType']) :
+            install_req_json['installs'][0]['vm_template'] = "Calculus win1064.5.2.1.2 J"
+    calculus_req_json['request'].update(install_req_json)
+
 checkpreq(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
 calculusRequest()
+checkOSAndlang()
 
 if GMproductDetails['Enable_CFF'] == 'True' :
     cffEnable()
