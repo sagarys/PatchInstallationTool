@@ -69,7 +69,7 @@ namespace Patch_Installation_tool
         }
         public void Get_Patch_Details()
         {
-            if (txtPatchpath.Text != "")
+            if (txtPatchpath.Text == "")
                 return;
 
             string line;
@@ -89,7 +89,12 @@ namespace Patch_Installation_tool
                         {
                             prereqlist = "";
                         }
+                        List<string> prereqPstemp = prereqlist.Split(',').Select(x => x + ".ps").ToList();
+                        prereqPstemp.RemoveAt(prereqPstemp.Count - 1);
+                        prereqlist = string.Join(",", prereqPstemp);
+                        prereqlist += ",";
                         txtPreReq.Text = prereqlist + Path.GetFileName(txtPatchpath.Text);
+                        txtPreReq.Text = txtPreReq.Text.Trim();
                         found = true;
                         break;
                     }
@@ -149,7 +154,7 @@ namespace Patch_Installation_tool
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(radioFremont.IsChecked == true)
+            if (radioFremont.IsChecked == true)
                 copyBuildToSyncServer();
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             if (chkPatchLoc.IsChecked == true)
@@ -166,6 +171,7 @@ namespace Patch_Installation_tool
                         Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
                         return;
                     }
+                    txtPrereqFrmPdl.Text += ',' + Path.GetFileName(txtPatchpath.Text);
                 }
                 else
                 {
@@ -217,7 +223,7 @@ namespace Patch_Installation_tool
                 product_Details_json.Add("ServerType", "VM");
                 product_Details_json.Add("IP_Adress", "");
             }
-            if(chkenbleSSH.IsChecked == true)
+            if (chkenbleSSH.IsChecked == true)
                 product_Details_json.Add("Enable_CFF", "True");
             else
                 product_Details_json.Add("Enable_CFF", "False");
