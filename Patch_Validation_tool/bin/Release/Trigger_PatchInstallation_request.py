@@ -118,7 +118,7 @@ def checkOSAndlang() :
     if GMproductDetails['ServerType'] ==  'VM' :
         if(GMproductDetails['Language'] == 'Japanese' and "Windows 10" in GMproductDetails['osType']) :
             install_req_json['installs'][0]['vm_template'] = "Calculus win1064.5.2.1.2 J"
-    calculus_req_json['request'].update(install_req_json)
+        calculus_req_json['request'].update(install_req_json)
 
 checkpreq(GMproductDetails['Product'],GMproductDetails['Prerequisite'])
 calculusRequest()
