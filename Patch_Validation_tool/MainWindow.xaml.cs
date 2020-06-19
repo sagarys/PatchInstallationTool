@@ -240,9 +240,21 @@ namespace Patch_Installation_tool
                 product_Details_json.Add("IP_Adress", "");
             }
             if (chkenbleSSH.IsChecked == true)
+            {
                 product_Details_json.Add("Enable_CFF", "True");
+            }
             else
+            {
                 product_Details_json.Add("Enable_CFF", "False");
+            }
+            if(radioBangalore.IsChecked == true)
+            {
+                product_Details_json.Add("region", "vCommander IDC");
+            }
+            else
+            {
+                product_Details_json.Add("region", "vCommander Fremont");
+            }
             product_Details_json.Add("WithInstaller", chkInstallerPath.IsChecked.ToString());
             product_Details_json.Add("Email", txtEmailAddr.Text.ToString());
             var tt = JsonConvert.SerializeObject(product_Details_json);
