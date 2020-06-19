@@ -19,7 +19,7 @@ calculus_req_json={
     "name"                  : "",
     "email_list"            : "",
     "region"                : "vCommander IDC",
-    "user"                  : "sagars",
+    "user"                  : "",
   }
 }
 
