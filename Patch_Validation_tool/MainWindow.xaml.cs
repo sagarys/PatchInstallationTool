@@ -90,12 +90,20 @@ namespace Patch_Installation_tool
                         {
                             prereqlist = "";
                         }
-                        List<string> prereqPstemp = prereqlist.Split(',').Select(x => x + ".ps").ToList();
-                        prereqPstemp.RemoveAt(prereqPstemp.Count - 1);
-                        prereqlist = string.Join(",", prereqPstemp);
-                        prereqlist += ",";
-                        txtPreReq.Text = prereqlist + Path.GetFileName(txtPatchpath.Text);
-                        txtPreReq.Text = txtPreReq.Text.Trim();
+                        if (prereqlist != "")
+                        {
+                            List<string> prereqPstemp = prereqlist.Split(',').Select(x => x + ".ps").ToList();
+                            prereqPstemp.RemoveAt(prereqPstemp.Count - 1);
+                            prereqlist = string.Join(",", prereqPstemp);
+                            prereqlist += ",";
+                            txtPreReq.Text = prereqlist + Path.GetFileName(txtPatchpath.Text);
+                            txtPreReq.Text = txtPreReq.Text.Trim();
+                        }
+                        else
+                        {
+                            txtPreReq.Text = Path.GetFileName(txtPatchpath.Text);
+                            txtPreReq.Text = txtPreReq.Text.Trim();
+                        }
                         found = true;
                         break;
                     }
@@ -255,6 +263,7 @@ namespace Patch_Installation_tool
         private void RadioVM_Checked(object sender, RoutedEventArgs e)
         {
             txtIpAdress.IsEnabled = false;
+            txtIpAdress.Text = "";
         }
 
         private void RadioServer_Checked(object sender, RoutedEventArgs e)
