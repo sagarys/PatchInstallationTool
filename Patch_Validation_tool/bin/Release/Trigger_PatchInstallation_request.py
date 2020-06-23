@@ -78,6 +78,7 @@ def updatePatchTestSuite(prodname,prereqList):
     if prereqList != '' :  
         temp = prereqList.split(',')
         tests_suite_json['tests'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
+        patch_req_json['suite'].append({"exe":"wait_ready", "timeout_seconds":8000})
         for patch in temp:
             patch_req_json['suite'].append({"exe":"testFierys","timeout_seconds" : 8000,"arguments":"-z1 -f /efi/pdlfiles/eng/Sustaining_Patches/"+prodname+"/"+patch})
             patch_req_json['suite'].append({"exe":"reboot", "timeout_seconds":8000})
