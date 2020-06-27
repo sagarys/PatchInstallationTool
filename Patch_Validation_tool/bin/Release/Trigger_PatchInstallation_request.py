@@ -68,8 +68,6 @@ def cffEnable() :
     tests_suite_json['tests'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
     if GMproductDetails['ServerType'] == 'Server' :
         patch_req_json['suite'].append({"exe":"CFF_Enable","timeout_seconds" : 8000})
-        patch_req_json['suite'].append({"exe":"reboot", "timeout_seconds":8000})
-        patch_req_json['suite'].append({"exe":"wait_ready", "timeout_seconds":8000})
     tests_suite_json['tests'][0].update({"target_ip":GMproductDetails['IP_Adress']})
     tests_suite_json['tests'][0].update(patch_req_json)
     calculus_req_json['request'].update(tests_suite_json)
