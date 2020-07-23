@@ -82,9 +82,6 @@ def updatePatchTestSuite(prodname,prereqList):
             patch_req_json['suite'].append({"exe":"reboot", "timeout_seconds":8000})
             patch_req_json['suite'].append({"exe":"wait_ready", "timeout_seconds":8000})
         
-        if GMproductDetails['ServerType'] ==  'VM' :
-            patch_req_json['suite'].append({"exe":"sleeper", "timeout_seconds":8000})
-        
         tests_suite_json['tests'][0].update(patch_req_json)
         calculus_req_json['request'].update(tests_suite_json)
         
@@ -112,6 +109,7 @@ def installOnVM(installerPath) :
     install_req_json['installs'][0]['product'] = str(GMproductDetails['calculus_name']).replace(" ","")
     install_req_json['installs'][0]['installer_url'] = str(GMproductDetails['Installer_path'])
     install_req_json['installs'][0].update({"livelink":"true"})
+    install_req_json['installs'][0].update({"claim":"true"})
     calculus_req_json['request'].update(install_req_json)
 
 def checkOSAndlang() :
